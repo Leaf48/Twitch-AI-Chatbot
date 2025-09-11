@@ -17,6 +17,7 @@ pub struct TwitchConfig {
 #[derive(Debug, Clone, Deserialize)]
 pub struct Account {
     pub oauth: String,
+    pub account_name: String,
     pub channel: String,
 }
 
