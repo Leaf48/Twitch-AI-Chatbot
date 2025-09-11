@@ -1,7 +1,7 @@
 use log::info;
-use Twitch_AI_Chatbot::logger::LoggerSetup;
+use Twitch_AI_Chatbot::{config::CONFIG, logger::LoggerSetup};
 
 fn main() {
     LoggerSetup::new();
-    info!("Hello, World!");
+    info!("Available chatbots: {:?}", CONFIG.accounts.len());
 }

@@ -1,0 +1,6 @@
+Twitch:
+  host: irc-ws.chat.twitch.tv
+
+Accounts:
+  - oauth: hogehoge
+    channel: channel_to_chat
