@@ -3,7 +3,7 @@ use Twitch_AI_Chatbot::{
     config::CONFIG,
     logger::LoggerSetup,
     twitch::{Twitch, UserMessagePayload},
-    workflows::{payload::MessagePayload, send_msg::send_msg},
+    workflows::{model::MessagePayload, send_msg::send_msg},
 };
 
 #[tokio::main]

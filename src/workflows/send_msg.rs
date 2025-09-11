@@ -1,6 +1,6 @@
 use crate::{
     twitch::{Twitch, TwitchError},
-    workflows::payload::MessagePayload,
+    workflows::model::MessagePayload,
 };
 
 pub async fn send_msg(payload: MessagePayload) -> Result<(), TwitchError> {
