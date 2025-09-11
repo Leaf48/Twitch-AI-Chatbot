@@ -11,7 +11,7 @@ async fn main() {
     LoggerSetup::new();
     info!("Available chatbots: {:?}", CONFIG.accounts.len());
 
-    let _ = send_msg(MessagePayload {
+    send_msg(MessagePayload {
         account: CONFIG.accounts[0].clone(),
         text: "Hello World".to_string(),
     })

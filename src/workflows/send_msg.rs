@@ -1,12 +1,18 @@
-use crate::{
-    twitch::{Twitch, TwitchError},
-    workflows::model::MessagePayload,
-};
+use log::error;
 
-pub async fn send_msg(payload: MessagePayload) -> Result<(), TwitchError> {
+use crate::{twitch::Twitch, workflows::model::MessagePayload};
+
+pub async fn send_msg(payload: MessagePayload) {
     let twitch = Twitch::new(payload.account);
-    let ws = twitch.connect_to_chat().await?;
-    let _ = twitch.send_chat(ws, payload.text).await?;
 
-    Ok(())
+    match twitch.connect_to_chat().await {
+        Ok(ws) => {
+            if let Err(err) = twitch.send_chat(ws, payload.text).await {
+                error!("{:?}", err)
+            }
+        }
+        Err(err) => {
+            error!("{:?}", err)
+        }
+    }
 }
