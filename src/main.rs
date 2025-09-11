@@ -1,3 +1,7 @@
+use log::info;
+use Twitch_AI_Chatbot::logger::LoggerSetup;
+
 fn main() {
-    println!("Hello, world!");
+    LoggerSetup::new();
+    info!("Hello, World!");
 }
