@@ -1,4 +1,7 @@
-use futures_util::SinkExt;
+use futures_util::{SinkExt, StreamExt};
+use log::trace;
+use once_cell::sync::Lazy;
+use regex::Regex;
 use thiserror::Error;
 use tokio::net::TcpStream;
 use tokio_tungstenite::{
@@ -6,9 +9,19 @@ use tokio_tungstenite::{
     tungstenite::{self, Message},
     MaybeTlsStream, WebSocketStream,
 };
-use url::Url;
 
 use crate::config::{Account, CONFIG};
+
+static MSG_RE: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(r"^:(?P<sender>[^! ]+)![^ ]+@[^ ]+\.tmi\.twitch\.tv PRIVMSG #[^ ]+ :(?P<msg>.+)$")
+        .unwrap()
+});
+
+#[derive(Debug, Clone)]
+pub struct UserMsg {
+    pub sender: String,
+    pub message: String,
+}
 
 #[derive(Clone)]
 pub struct UserMessagePayload {
@@ -54,7 +67,7 @@ impl Twitch {
         ))
         .await?;
         ws.send(Message::Text(
-            format!("JOIN {}\r\n", self.account.channel).into(),
+            format!("JOIN #{}\r\n", self.account.channel).into(),
         ))
         .await?;
 
@@ -73,4 +86,50 @@ impl Twitch {
 
         Ok(())
     }
+
+    /// Receive chat
+    ///
+    /// retrieve: the number of messages sent by users to return
+    pub async fn receive_chat(
+        &self,
+        mut ws: WebSocketStream<MaybeTlsStream<TcpStream>>,
+        retrieve: usize,
+    ) -> Result<Vec<UserMsg>, TwitchError> {
+        let mut msg_history: Vec<UserMsg> = Vec::new();
+
+        while let Some(msg) = ws.next().await {
+            let msg = msg?;
+            if let Ok(text) = msg.to_text() {
+                // return pong
+                if text.starts_with("PING") {
+                    ws.send(Message::Text("PONG".into())).await?;
+                // PRIVMSG
+                } else {
+                    if let Some((sender, msg)) = parse_msg(text.trim()) {
+                        trace!("{}: {}", sender, msg);
+                        msg_history.push(UserMsg {
+                            sender: sender,
+                            message: msg,
+                        });
+                    }
+                }
+            }
+            if msg_history.len() >= retrieve {
+                break;
+            }
+        }
+
+        Ok(msg_history)
+    }
+}
+
+/// Parse and return PRIVMSG
+/// (Sender, Message)
+fn parse_msg(line: &str) -> Option<(String, String)> {
+    let captures = MSG_RE.captures(line)?;
+
+    let sender = captures.name("sender")?.as_str().to_string();
+    let msg = captures.name("msg")?.as_str().to_string();
+
+    Some((sender, msg))
 }

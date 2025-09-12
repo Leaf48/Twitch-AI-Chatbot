@@ -11,6 +11,7 @@ dependencies = [
  "futures-util",
  "log",
  "once_cell",
+ "regex",
  "serde",
  "serde_yml",
  "thiserror",
