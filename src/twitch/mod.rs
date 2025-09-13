@@ -12,6 +12,7 @@ use tokio_tungstenite::{
 
 use crate::config::{Account, CONFIG};
 
+// Regex of PRIVMSG
 static MSG_RE: Lazy<Regex> = Lazy::new(|| {
     Regex::new(r"^:(?P<sender>[^! ]+)![^ ]+@[^ ]+\.tmi\.twitch\.tv PRIVMSG #[^ ]+ :(?P<msg>.+)$")
         .unwrap()
@@ -100,7 +101,7 @@ impl Twitch {
         while let Some(msg) = ws.next().await {
             let msg = msg?;
             if let Ok(text) = msg.to_text() {
-                // return pong
+                // send pong
                 if text.starts_with("PING") {
                     ws.send(Message::Text("PONG".into())).await?;
                 // PRIVMSG
@@ -114,6 +115,7 @@ impl Twitch {
                     }
                 }
             }
+
             if msg_history.len() >= retrieve {
                 break;
             }
@@ -123,8 +125,7 @@ impl Twitch {
     }
 }
 
-/// Parse and return PRIVMSG
-/// (Sender, Message)
+/// Parse PRIVMSG and return (Sender, Message)
 fn parse_msg(line: &str) -> Option<(String, String)> {
     let captures = MSG_RE.captures(line)?;
 
