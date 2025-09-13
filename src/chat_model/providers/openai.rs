@@ -6,11 +6,11 @@ use crate::{
     config::CONFIG,
 };
 
-pub struct OpenAi {
+pub struct OpenAI {
     model: Cow<'static, str>,
 }
 
-impl OpenAi {
+impl OpenAI {
     pub fn new<S: Into<Cow<'static, str>>>(model: S) -> Self {
         Self {
             model: model.into(),
@@ -19,7 +19,7 @@ impl OpenAi {
 }
 
 #[async_trait]
-impl ChatModel for OpenAi {
+impl ChatModel for OpenAI {
     async fn generate(&self, req: &MessageRequest) -> Result<MessageResponse, ChatModelError> {
         // Read model
         let model = self.model.as_ref();
