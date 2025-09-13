@@ -5,3 +5,6 @@ Accounts:
   - oauth: hogehoge
     account_name: speaker
     channel: channel_to_chat
+
+OpenAI:
+  api_key: sk-

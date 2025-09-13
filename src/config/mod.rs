@@ -7,11 +7,18 @@ pub struct Config {
     pub twitch: TwitchConfig,
     #[serde(rename = "Accounts")]
     pub accounts: Vec<Account>,
+    #[serde(rename = "OpenAI")]
+    pub openai: OpenAIConfig,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct TwitchConfig {
     pub host: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct OpenAIConfig {
+    pub api_key: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
