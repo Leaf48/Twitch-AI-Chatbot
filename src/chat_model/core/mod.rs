@@ -23,7 +23,14 @@ pub struct MessageResponse {
 
 /// ChatModel errors
 #[derive(Error, Debug)]
-pub enum ChatModelError {}
+pub enum ChatModelError {
+    #[error("HTTP error: {0}")]
+    Http(#[from] reqwest::Error),
+    #[error("JSON error: {0}")]
+    Json(#[from] serde_json::Error),
+    #[error("API error: {0}")]
+    Api(String),
+}
 
 /// Completion API traits
 #[async_trait]
