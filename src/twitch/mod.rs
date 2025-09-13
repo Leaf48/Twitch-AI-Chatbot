@@ -94,7 +94,7 @@ impl Twitch {
     pub async fn receive_chat(
         &self,
         mut ws: WebSocketStream<MaybeTlsStream<TcpStream>>,
-        retrieve: usize,
+        len: usize,
     ) -> Result<Vec<UserMsg>, TwitchError> {
         let mut msg_history: Vec<UserMsg> = Vec::new();
 
@@ -116,7 +116,7 @@ impl Twitch {
                 }
             }
 
-            if msg_history.len() >= retrieve {
+            if msg_history.len() >= len {
                 break;
             }
         }
