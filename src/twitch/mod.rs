@@ -35,12 +35,12 @@ pub enum TwitchError {
     WebSocketError(#[from] tungstenite::Error),
 }
 
-pub struct Twitch {
-    account: Account,
+pub struct Twitch<'a> {
+    account: &'a Account,
 }
 
-impl Twitch {
-    pub fn new(account: Account) -> Self {
+impl<'a> Twitch<'a> {
+    pub fn new(account: &'a Account) -> Self {
         Self { account }
     }
 
