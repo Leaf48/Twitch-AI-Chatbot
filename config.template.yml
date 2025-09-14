@@ -6,6 +6,7 @@ Accounts:
     account_name: username
     channel: channeltospeak
     instruction: instructions/template.json
+    gpt_model: gpt-5-nano
 
 OpenAI:
   api_key: sk-
