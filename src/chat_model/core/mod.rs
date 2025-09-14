@@ -1,8 +1,9 @@
 use async_trait::async_trait;
+use serde::Deserialize;
 use thiserror::Error;
 
 /// Message history
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct Message {
     pub role: String,
     pub content: String,
