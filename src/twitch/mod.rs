@@ -10,7 +10,7 @@ use tokio_tungstenite::{
     MaybeTlsStream, WebSocketStream,
 };
 
-use crate::config::{Account, CONFIG};
+use crate::config::{utils::get_account_names, Account, CONFIG};
 
 // Regex of PRIVMSG
 static MSG_RE: Lazy<Regex> = Lazy::new(|| {
@@ -108,6 +108,11 @@ impl<'a> Twitch<'a> {
                 } else {
                     if let Some((sender, msg)) = parse_msg(text.trim()) {
                         trace!("{}: {}", sender, msg);
+
+                        if get_account_names().contains(&sender.as_str()) {
+                            continue;
+                        }
+
                         msg_history.push(UserMsg {
                             sender: sender,
                             message: msg,

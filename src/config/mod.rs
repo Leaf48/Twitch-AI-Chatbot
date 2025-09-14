@@ -1,6 +1,8 @@
 use once_cell::sync::Lazy;
 use serde::Deserialize;
 
+pub mod utils;
+
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
     #[serde(rename = "Twitch")]
