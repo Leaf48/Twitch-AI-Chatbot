@@ -26,6 +26,7 @@ pub struct Account {
     pub oauth: String,
     pub account_name: String,
     pub channel: String,
+    pub instruction: String,
 }
 
 pub fn load_config() -> Config {

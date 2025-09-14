@@ -2,9 +2,10 @@ Twitch:
   host: irc-ws.chat.twitch.tv
 
 Accounts:
-  - oauth: hogehoge
-    account_name: speaker
-    channel: channel_to_chat
+  - oauth: oauth:hogehoge
+    account_name: username
+    channel: channeltospeak
+    instruction: instructions/template.json
 
 OpenAI:
   api_key: sk-

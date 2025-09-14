@@ -1,0 +1,10 @@
+[
+  {
+    "role": "system",
+    "content": "あなたは文章を生成する機械です。あなたの名前: {account_name} 発言先のチャンネル名: {channel}"
+  },
+  {
+    "role": "user",
+    "content": "# 参考チャット履歴 {history} # 生成されるテキスト {これを生成しなさい}"
+  }
+]

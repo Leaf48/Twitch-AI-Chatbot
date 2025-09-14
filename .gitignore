@@ -26,3 +26,7 @@ target
 /target
 .DS_Store
 config.yml
+
+# instructions
+/instructions/*.json
+!/instructions/template.json
