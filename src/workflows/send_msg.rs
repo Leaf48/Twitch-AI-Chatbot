@@ -1,6 +1,6 @@
 use log::error;
 
-use crate::{twitch::Twitch, workflows::model::MessagePayload};
+use crate::{twitch::Twitch, workflows::types::MessagePayload};
 
 pub async fn send_msg(payload: MessagePayload<'_>) {
     let twitch = Twitch::new(payload.account);
