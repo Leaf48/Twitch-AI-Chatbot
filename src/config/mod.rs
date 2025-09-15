@@ -30,6 +30,13 @@ pub struct Account {
     pub channel: String,
     pub instruction: String,
     pub gpt_model: String,
+    pub proxy: Option<ProxyConfig>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ProxyConfig {
+    pub host: String,
+    pub password: String,
 }
 
 pub fn load_config() -> Config {

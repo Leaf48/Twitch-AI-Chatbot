@@ -7,6 +7,9 @@ Accounts:
     channel: channeltospeak
     instruction: instructions/template.json
     gpt_model: gpt-5-nano
+    proxy:
+      host: http://0.0.0.0:80
+      password: hogehoge
 
 OpenAI:
   api_key: sk-
