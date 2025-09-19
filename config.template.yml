@@ -9,6 +9,7 @@ Accounts:
     gpt_model: gpt-5-nano
     proxy:
       host: http://0.0.0.0:80
+      username: hogehoge
       password: hogehoge
 
 OpenAI:

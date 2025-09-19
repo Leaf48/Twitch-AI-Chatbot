@@ -36,7 +36,8 @@ pub struct Account {
 #[derive(Debug, Clone, Deserialize)]
 pub struct ProxyConfig {
     pub host: String,
-    pub password: String,
+    pub username: Option<String>,
+    pub password: Option<String>,
 }
 
 pub fn load_config() -> Config {
