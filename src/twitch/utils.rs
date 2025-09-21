@@ -1,7 +1,6 @@
 use log::error;
 use reqwest::header::HeaderMap;
 use serde_json::{json, Value};
-use serde_yml::modules::error::new;
 
 use crate::config::Account;
 

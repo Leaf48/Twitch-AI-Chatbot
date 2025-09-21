@@ -1,10 +1,9 @@
 use std::{
     collections::HashMap,
     sync::Mutex,
-    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
+    time::{Duration, Instant},
 };
 
-use log::trace;
 use once_cell::sync::Lazy;
 
 use crate::config::{Account, CONFIG};
@@ -36,7 +35,7 @@ pub fn update_last_message_created_at(account: &Account) {
 /// Get last message created at
 pub fn get_last_message_created_at(account: &Account) -> Option<Instant> {
     let k = format!("{}:{}", account.account_name, account.channel);
-    let mut ch = CHANNELS.lock().unwrap();
+    let ch = CHANNELS.lock().unwrap();
     ch.get(&k).copied()
 }
 
