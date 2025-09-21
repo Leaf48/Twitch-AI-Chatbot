@@ -1,6 +1,7 @@
 use once_cell::sync::Lazy;
 use serde::Deserialize;
 
+pub mod channel;
 pub mod utils;
 
 #[derive(Debug, Clone, Deserialize)]
@@ -24,12 +25,23 @@ pub struct OpenAIConfig {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+pub enum OperatingMode {
+    ALWAYS,
+    OFFLINE,
+    ONLINE,
+}
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct Account {
     pub oauth: String,
     pub account_name: String,
     pub channel: String,
     pub instruction: String,
     pub gpt_model: String,
+    pub operating_mode: OperatingMode,
+    pub interval: usize,
+    pub timeout: usize,
+    pub chat_history_size: usize,
     pub proxy: Option<ProxyConfig>,
 }
 

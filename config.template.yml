@@ -7,6 +7,11 @@ Accounts:
     channel: channeltospeak
     instruction: instructions/template.json
     gpt_model: gpt-5-nano
+    #! operating mode is either ALWAYS, ONLINE, and OFFLINE
+    operating_mode: ALWAYS
+    interval: 60
+    timeout: 300
+    chat_history_size: 5
     proxy:
       host: http://0.0.0.0:80
       username: hogehoge
