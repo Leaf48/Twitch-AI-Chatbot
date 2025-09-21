@@ -1,0 +1,9 @@
+services:
+  chatbot:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - RUST_LOG=trace
+      - CONFIG_PATH=config.yml
