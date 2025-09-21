@@ -24,10 +24,10 @@ async fn main() {
         for account in &CONFIG.accounts {
             let online_status = is_online(account).await;
 
-            debug!(
-                "{}: operating mode='{:?}' current status='{}'",
-                account.channel, account.operating_mode, online_status
-            );
+            // debug!(
+            //     "{}: operating mode='{:?}' current status='{}'",
+            //     account.channel, account.operating_mode, online_status
+            // );
 
             let should_process = match account.operating_mode {
                 OperatingMode::ALWAYS => true,
