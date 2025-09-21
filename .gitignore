@@ -25,9 +25,14 @@ target
 
 /target
 .DS_Store
-config.yml
 
 # instructions
 /instructions/*.json
 !/instructions/template.json
 note.txt
+docker-compose.yml
+
+# configs
+config.yml
+config.*.yml
+!config.template.yml
