@@ -30,3 +30,4 @@ config.yml
 # instructions
 /instructions/*.json
 !/instructions/template.json
+note.txt
