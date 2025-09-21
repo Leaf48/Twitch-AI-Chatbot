@@ -5,7 +5,7 @@ use log::{debug, info, warn};
 use tokio::time::{sleep, timeout};
 use Twitch_AI_Chatbot::{
     config::{
-        channel::{can_send_now, init_channels},
+        channel::{can_send_now, init_channels, update_last_message_created_at},
         OperatingMode, CONFIG,
     },
     logger::LoggerSetup,
@@ -53,6 +53,9 @@ async fn main() {
                 Ok(()) => debug!("completed: {}", account.channel),
                 Err(_) => warn!("{} timeout: {} secs", account.channel, account.timeout),
             }
+
+            // update hashmap
+            update_last_message_created_at(account);
         }
         sleep(Duration::from_secs(1)).await;
     }
