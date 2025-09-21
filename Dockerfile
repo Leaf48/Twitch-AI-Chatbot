@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/target/release/Twitch-AI-Chatbot /app/
-COPY instructions /app/
+COPY instructions /app/instructions
 COPY config*.yml /app/
 
 CMD [ "./Twitch-AI-Chatbot" ]
