@@ -33,7 +33,7 @@ async fn main() {
             )
             .await
             {
-                Ok(()) => debug!("completed: {}", account.account_name),
+                Ok(()) => debug!("completed: {}", account.channel),
                 Err(_) => warn!("timeout: {} secs", account.timeout),
             }
         }
