@@ -22,24 +22,18 @@ async fn main() {
 
     loop {
         for account in &CONFIG.accounts {
+            // check if interval time elapsed
+            if !can_send_now(account) {
+                continue;
+            }
+
             let online_status = is_online(account).await;
-
-            // debug!(
-            //     "{}: operating mode='{:?}' current status='{}'",
-            //     account.channel, account.operating_mode, online_status
-            // );
-
             let should_process = match account.operating_mode {
                 OperatingMode::ALWAYS => true,
                 OperatingMode::OFFLINE => !online_status,
                 OperatingMode::ONLINE => online_status,
             };
             if !should_process {
-                continue;
-            }
-
-            // check if interval time elapsed
-            if !can_send_now(account) {
                 continue;
             }
 
