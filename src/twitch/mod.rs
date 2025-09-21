@@ -15,6 +15,8 @@ use url::Url;
 
 use crate::config::{utils::get_account_names, Account, ProxyConfig, CONFIG};
 
+pub mod utils;
+
 // Regex of PRIVMSG
 static MSG_RE: Lazy<Regex> = Lazy::new(|| {
     Regex::new(r"^:(?P<sender>[^! ]+)![^ ]+@[^ ]+\.tmi\.twitch\.tv PRIVMSG #[^ ]+ :(?P<msg>.+)$")

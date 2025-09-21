@@ -24,7 +24,7 @@ pub struct OpenAIConfig {
     pub api_key: String,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, PartialEq)]
 pub enum OperatingMode {
     ALWAYS,
     OFFLINE,
