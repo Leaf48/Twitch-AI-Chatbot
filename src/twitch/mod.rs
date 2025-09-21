@@ -70,11 +70,13 @@ impl<'a> Twitch<'a> {
             format!("PASS {}\r\n", self.account.oauth).into(),
         ))
         .await?;
+
         //* Nickname should not be random. It needs to be equal to oauth token's username.
         ws.send(Message::Text(
             format!("NICK {}\r\n", self.account.account_name).into(),
         ))
         .await?;
+
         ws.send(Message::Text(
             format!(
                 "USER {} 8 * :{}\r\n",
@@ -97,7 +99,7 @@ impl<'a> Twitch<'a> {
         text: String,
     ) -> Result<(), TwitchError> {
         ws.send(Message::Text(
-            format!("PRIVMSG #{} :{}", self.account.account_name, text).into(),
+            format!("PRIVMSG #{} :{}", self.account.channel, text).into(),
         ))
         .await?;
 
@@ -189,7 +191,6 @@ async fn connect_via_proxy(
     stream.write_all(connect_request.as_bytes()).await?;
 
     let response = read_proxy_connect_response(&mut stream).await?;
-    println!("{}", response);
     let status_line = response.lines().next().unwrap_or("");
     let mut parts = status_line.split_whitespace();
     let _ = parts.next();
