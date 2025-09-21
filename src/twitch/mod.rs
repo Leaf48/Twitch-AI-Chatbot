@@ -123,7 +123,7 @@ impl<'a> Twitch<'a> {
             if let Ok(text) = msg.to_text() {
                 // send pong
                 if text.starts_with("PING") {
-                    ws.send(Message::Text("PONG :tmi.twitch.tv\r\n".into())).await?;
+                    ws.send(Message::Text("PONG\r\n".into())).await?;
                 // PRIVMSG
                 } else {
                     if let Some((sender, msg)) = parse_msg(text.trim()) {
