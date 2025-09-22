@@ -36,3 +36,4 @@ docker-compose.yml
 config.yml
 config.*.yml
 !config.template.yml
+update/*
