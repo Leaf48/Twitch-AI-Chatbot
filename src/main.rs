@@ -16,7 +16,7 @@ use Twitch_AI_Chatbot::{
 #[tokio::main]
 async fn main() {
     LoggerSetup::new();
-    info!("Available chatbots: {:?}", CONFIG.accounts.len());
+    info!("Available chatbots: {}", CONFIG.accounts.len());
 
     init_channels();
 
@@ -24,16 +24,32 @@ async fn main() {
         for account in &CONFIG.accounts {
             // check if interval time elapsed
             if !can_send_now(account) {
+                debug!(
+                    "Skipping {}: waiting for cooldown window before sending next message",
+                    account.channel
+                );
                 continue;
             }
 
             let online_status = is_online(account).await;
+            debug!(
+                "Channel {} status: {} (operating mode: {:?})",
+                account.channel,
+                if online_status { "online" } else { "offline" },
+                account.operating_mode
+            );
             let should_process = match account.operating_mode {
                 OperatingMode::ALWAYS => true,
                 OperatingMode::OFFLINE => !online_status,
                 OperatingMode::ONLINE => online_status,
             };
             if !should_process {
+                debug!(
+                    "Skipping {}: operating mode {:?} does not allow processing while channel is {}",
+                    account.channel,
+                    account.operating_mode,
+                    if online_status { "online" } else { "offline" }
+                );
                 continue;
             }
 
@@ -44,8 +60,12 @@ async fn main() {
             )
             .await
             {
-                Ok(()) => debug!("completed: {}", account.channel),
-                Err(_) => warn!("{} timeout: {} secs", account.channel, account.timeout),
+                Ok(()) => info!("Completed message cycle for {}", account.channel),
+                Err(_) => warn!(
+                    "Channel {} timed out after {} seconds",
+                    account.channel,
+                    account.timeout
+                ),
             }
 
             // update hashmap
