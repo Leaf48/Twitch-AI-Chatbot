@@ -24,10 +24,6 @@ async fn main() {
         for account in &CONFIG.accounts {
             // check if interval time elapsed
             if !can_send_now(account) {
-                debug!(
-                    "Skipping {}: waiting for cooldown window before sending next message",
-                    account.channel
-                );
                 continue;
             }
 
@@ -44,12 +40,7 @@ async fn main() {
                 OperatingMode::ONLINE => online_status,
             };
             if !should_process {
-                debug!(
-                    "Skipping {}: operating mode {:?} does not allow processing while channel is {}",
-                    account.channel,
-                    account.operating_mode,
-                    if online_status { "online" } else { "offline" }
-                );
+                update_last_message_created_at(account);
                 continue;
             }
 
@@ -63,8 +54,7 @@ async fn main() {
                 Ok(()) => info!("Completed message cycle for {}", account.channel),
                 Err(_) => warn!(
                     "Channel {} timed out after {} seconds",
-                    account.channel,
-                    account.timeout
+                    account.channel, account.timeout
                 ),
             }
 
