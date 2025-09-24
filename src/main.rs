@@ -5,7 +5,7 @@ use log::{debug, info, warn};
 use tokio::time::{sleep, timeout};
 use Twitch_AI_Chatbot::{
     config::{
-        channel::{can_send_now, init_channels, update_last_message_created_at},
+        channel::{can_execute, init_channels, schedule_next_execution_in},
         OperatingMode, CONFIG,
     },
     logger::LoggerSetup,
@@ -22,8 +22,7 @@ async fn main() {
 
     loop {
         for account in &CONFIG.accounts {
-            // check if interval time elapsed
-            if !can_send_now(account) {
+            if !can_execute(account) {
                 continue;
             }
 
@@ -40,7 +39,7 @@ async fn main() {
                 OperatingMode::ONLINE => online_status,
             };
             if !should_process {
-                update_last_message_created_at(account);
+                schedule_next_execution_in(account, Duration::from_secs(60 * 10));
                 continue;
             }
 
@@ -59,8 +58,12 @@ async fn main() {
             }
 
             // update hashmap
-            update_last_message_created_at(account);
+            schedule_next_execution_in(
+                account,
+                Duration::from_secs(account.interval.try_into().unwrap()),
+            );
+
+            sleep(Duration::from_secs(1)).await;
         }
-        sleep(Duration::from_secs(1)).await;
     }
 }

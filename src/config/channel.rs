@@ -8,48 +8,32 @@ use once_cell::sync::Lazy;
 
 use crate::config::{Account, CONFIG};
 
-// account_name:channel, last_message_created_at
+// account_name:channel, next_executable_at
 pub static CHANNELS: Lazy<Mutex<HashMap<String, Instant>>> =
     Lazy::new(|| Mutex::new(HashMap::new()));
 
 pub fn init_channels() {
+    let mut ch = CHANNELS.lock().unwrap();
     for acc in &CONFIG.accounts {
-        let k = format!("{}:{}", acc.account_name, acc.channel);
-
-        let mut ch = CHANNELS.lock().unwrap();
-        ch.insert(
-            k,
-            Instant::now() - Duration::from_secs(acc.interval.try_into().unwrap()),
-        );
+        ch.insert(channel_key(acc), Instant::now());
     }
 }
 
-/// Update value with current time
-pub fn update_last_message_created_at(account: &Account) {
-    CHANNELS.lock().unwrap().insert(
-        format!("{}:{}", account.account_name, account.channel),
-        Instant::now(),
-    );
+fn channel_key(account: &Account) -> String {
+    format!("{}:{}", account.account_name, account.channel)
 }
 
-/// Get last message created at
-pub fn get_last_message_created_at(account: &Account) -> Option<Instant> {
-    let k = format!("{}:{}", account.account_name, account.channel);
-    let ch = CHANNELS.lock().unwrap();
-    ch.get(&k).copied()
-}
-
-/// Return true if account's interval exceeds elapsed time
-pub fn can_send_now(account: &Account) -> bool {
-    let key = format!("{}:{}", account.account_name, account.channel);
-
+/// Returns true if the current time is at or past the scheduled execution time.
+pub fn can_execute(account: &Account) -> bool {
     let mut m = CHANNELS.lock().unwrap();
+    let next_ready = m.entry(channel_key(account)).or_insert_with(Instant::now);
+    Instant::now() >= *next_ready
+}
 
-    let e = m.entry(key).or_insert_with(Instant::now);
-    if e.elapsed() >= Duration::from_secs(account.interval.try_into().unwrap()) {
-        *e = Instant::now();
-        true
-    } else {
-        false
-    }
+/// Schedules the next execution by offsetting from now.
+pub fn schedule_next_execution_in(account: &Account, offset_ms: Duration) {
+    CHANNELS
+        .lock()
+        .unwrap()
+        .insert(channel_key(account), Instant::now() + offset_ms);
 }
